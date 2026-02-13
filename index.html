@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For My Valentine</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body{
+  font-family:'Poppins',sans-serif;
+  background-color:#ffdde1;
+  background-image:linear-gradient(0deg,#ffdde1 0%,#ee9ca7 100%);
+  min-height:100svh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow-y:auto;
+  overflow-x:hidden;
+  text-align:center;
+  padding:20px 0;
+}
+
+.container{ width:100%; max-width:650px; padding:20px; }
+
+h1{
+  font-family:'Dancing Script',cursive;
+  font-size:clamp(2rem,6vw,3rem);
+  color:#d63384;
+  margin-bottom:18px;
+  text-shadow:2px 2px 4px rgba(0,0,0,0.08);
+  animation:pulse 2s infinite;
+}
+
+/* Proposal buttons */
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+
+button{
+  padding:14px 38px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow:0 4px 15px rgba(0,0,0,0.12);
+  transition:transform 0.15s ease;
+  touch-action:manipulation;
+}
+
+button:active{ transform:scale(0.98); }
+
+.btn-yes{ background-color:#ff4d6d; color:#fff; }
+.btn-yes:hover{ transform:scale(1.03); }
+
+.btn-no{
+  background-color:#fff;
+  color:#ff4d6d;
+  position:relative;
+  z-index:100;
+}
+
+/* Letters */
+.letters-section{ display:none; width:100%; }
+
+.grid-container{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:18px;
+  padding-bottom:10px;
+}
+
+.letter-card{
+  background:rgba(255,255,255,0.92);
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  cursor:pointer;
+  transition:all 0.45s cubic-bezier(0.68,-0.55,0.27,1.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  aspect-ratio:1;
+  position:relative;
+  overflow:hidden;
+}
+
+.face-envelope{ font-size:2.5rem; display:block; }
+
+.face-topic{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%; height:100%;
+  padding:14px;
+}
+
+.topic-text{
+  font-family:'Dancing Script',cursive;
+  font-size:1.35rem;
+  color:#d63384;
+  margin-bottom:6px;
+  line-height:1.1;
+}
+
+.tap-hint{
+  font-size:0.72rem;
+  color:#888;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.face-content{
+  display:none;
+  text-align:left;
+  width:100%;
+  height:100%;
+  padding:18px;
+  overflow-y:auto;
+  font-size:1rem;
+  line-height:1.65;
+  color:#444;
+  border:2px solid #ffdde1;
+  border-radius:10px;
+  background:#fffdf9;
+}
+
+.face-content h3{
+  font-family:'Dancing Script',cursive;
+  color:#d63384;
+  font-size:1.8rem;
+  margin-bottom:10px;
+}
+
+.close-btn{
+  position:absolute;
+  top:10px;
+  right:14px;
+  font-size:1.6rem;
+  color:#aaa;
+  display:none;
+  z-index:1002;
+  cursor:pointer;
+  user-select:none;
+}
+
+/* Centered (topic) */
+.letter-card.centered{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(1.05);
+  width:min(84vw,320px);
+  aspect-ratio:1.5/1;
+  z-index:1000;
+  background:#fff;
+  box-shadow:0 22px 70px rgba(0,0,0,0.30);
+}
+
+.letter-card.centered .face-envelope{ display:none; }
+.letter-card.centered .face-topic{ display:flex; }
+.letter-card.centered .face-content{ display:none; }
+
+/* Open (content) */
+.letter-card.open{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:min(92vw,430px);
+  height:min(72svh,560px);
+  z-index:1001;
+  background:#fff;
+}
+
+.letter-card.open .face-envelope{ display:none; }
+.letter-card.open .face-topic{ display:none; }
+.letter-card.open .face-content{ display:block; animation:fadeIn 0.35s; }
+.letter-card.open .close-btn{ display:block; }
+
+.letter-card.faded{ opacity:0; pointer-events:none; }
+
+/* Mobile */
+@media (max-width:480px){
+  .buttons{ flex-direction:column; gap:12px; }
+  button{ width:100%; max-width:280px; margin:0 auto; }
+  .grid-container{ grid-template-columns:repeat(2,1fr); gap:12px; }
+  .topic-text{ font-size:1.2rem; }
+  .letter-card.open{ width:94vw; height:74svh; }
+}
+
+/* Animations */
+@keyframes pulse{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.04); }
+  100%{ transform:scale(1); }
+}
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div id="proposal">
+    <h1>Will you be my Valentine, Navee ❤️?</h1>
+    <div class="buttons">
+      <button class="btn-yes" id="yesBtn">YES!</button>
+      <button class="btn-no" id="noBtn" type="button">No</button>
+    </div>
+  </div>
+
+  <div id="letters" class="letters-section">
+    <h1>9 Reasons Why ❤️</h1>
+
+    <div class="grid-container">
+
+      <!-- 1 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">The First Day</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>The First Day</h3>
+          <p>I still remember the first day we met 😌. Purple top and a black hat ✨. I don't speak much with many people, but that day u became someone I felt close to (no doubt u might have had ur charms 😌). Never thought those small conversations would bring us to where we are today. I am truly grateful for your presence in my life. Love you ❤️😚</p>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">Us</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>Us</h3>
+          <p>I don't know what the future holds, but I know I need u in it. I constantly dream about my life with u—grocery shopping together, cuddling in bed, traveling to different countries, cooking in the kitchen, cute arguments, and many more. Let's see what our future holds together 😌</p>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">Better Me</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>Better Me</h3>
+          <p>You make me want to be a better man. I always try to push myself to be a better version so I can treat u better every day. That urge u created, I felt it for the first time with you 😌. So yhh, I guess it’s true what people say: there is a woman behind every successful man.</p>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">Favorite Memory</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>Favorite Memory</h3>
+          <p>We’ve created many memories in this short time, and we will make more. I value each and every one of them, but one touched me deeply 😌. One day when we hugged, u grabbed the back of my head with your hand—literally <i>'oya mage oluwa atha gaawa'</i> during our hug. I still recall that moment vividly in my head.</p>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">Thank You</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>Thank You</h3>
+          <p>I don't say it enough, but thank you for choosing me, coming into my life, and bearing with my difficult behaviors 😌. Sometimes ur motivation drove me forward in life. U became my top priority within weeks. I don't usually make such priorities, but u became an exception. I am truly grateful for ur love and care. Love u loads ❤️😚</p>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">Home</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>Home</h3>
+          <p>Everyone has their problems and so do I—academic pressure, small fights with family, friend issues, and many more. But I forget all of it when I am with you. Maybe that's the magic of love. U became my second home, my safe place. U never judged me for who I am or what I do. That itself is very rare to find.</p>
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">Little Things</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>Little Things</h3>
+          <p>I love the small things: the way u tie ur hair mid-conversation, the way u look at me with ur big eyes, the way u say 'baaa' without a single sound. The way u grab me when we are hugging, the way u laugh after teasing me, and many more. I cherish those moments with my whole heart.</p>
+        </div>
+      </div>
+
+      <!-- 8 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">My Everything</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>My Everything</h3>
+          <p>U are the first thing I think of when I wake up. The first thing I do is check the phone for ur message before continuing with other things. There is not a single moment in my day where I don't remember you. U are the last thing on my mind before I go to sleep. So yhh, u became my everything within a few months ❤️</p>
+        </div>
+      </div>
+
+      <!-- 9 -->
+      <div class="letter-card" onclick="handleCardClick(this)">
+        <div class="face-envelope">💌</div>
+        <div class="face-topic">
+          <h2 class="topic-text">My Best Friend</h2>
+          <span class="tap-hint">(Tap to read)</span>
+        </div>
+        <div class="face-content">
+          <div class="close-btn" onclick="closeCard(event)">×</div>
+          <h3>My Best Friend</h3>
+          <p>Ur not just my Valentine, luv. U are my best friend, my little kiddo, my second mom, and my biggest supporter. Thank you for everything u do and the impact u make in my life with the small things you do ❤️</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Background music (put music.mp3 in same folder) -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const proposalDiv = document.getElementById('proposal');
+const lettersDiv = document.getElementById('letters');
+const bgMusic = document.getElementById('bgMusic');
+
+/* YES: show letters + confetti + play music (iPhone-safe: user gesture) */
+yesBtn.addEventListener('click', () => {
+  proposalDiv.style.display = 'none';
+  lettersDiv.style.display = 'block';
+  launchConfetti();
+
+  bgMusic.volume = 0.75;
+  const p = bgMusic.play();
+  if (p && p.catch) p.catch(() => {});
+});
+
+/* NO: runaway (prevent accidental YES tap on iPhone) */
+function moveButton() {
+  const padding = 8;
+  const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
+
+  const x = Math.max(padding, Math.floor(Math.random() * maxWidth));
+  const y = Math.max(padding, Math.floor(Math.random() * maxHeight));
+
+  noBtn.style.position = 'fixed';
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+}
+
+noBtn.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  moveButton();
+});
+
+noBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  moveButton();
+});
+
+/* Cards: 3-step interaction */
+function handleCardClick(card) {
+  const allCards = document.querySelectorAll('.letter-card');
+
+  // If OPEN -> close all
+  if (card.classList.contains('open')) {
+    resetAllCards(allCards);
+    return;
+  }
+
+  // If CENTERED -> open it
+  if (card.classList.contains('centered')) {
+    card.classList.remove('centered');
+    card.classList.add('open');
+    return;
+  }
+
+  // Default -> focus it (show topic)
+  resetAllCards(allCards);
+  allCards.forEach(c => { if (c !== card) c.classList.add('faded'); });
+  card.classList.add('centered');
+}
+
+function resetAllCards(allCards) {
+  allCards.forEach(c => c.classList.remove('centered','open','faded'));
+}
+
+/* Close button (X) inside content */
+function closeCard(e){
+  e.preventDefault();
+  e.stopPropagation();
+  const allCards = document.querySelectorAll('.letter-card');
+  resetAllCards(allCards);
+}
+
+/* Confetti */
+function launchConfetti() {
+  const colors = ['#ff4d6d', '#d63384', '#fff'];
+  for (let i = 0; i < 60; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.position = 'fixed';
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.top = '-12px';
+    confetti.style.width = '10px';
+    confetti.style.height = '10px';
+    confetti.style.borderRadius = '2px';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.opacity = '0.95';
+    confetti.style.zIndex = '9999';
+    confetti.style.animation = `fall ${Math.random() * 2.5 + 2.2}s linear forwards`;
+    document.body.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 5500);
+  }
+}
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); }
+}`;
+document.head.appendChild(styleSheet);
+</script>
+</body>
