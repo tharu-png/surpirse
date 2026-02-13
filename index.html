@@ -72,45 +72,16 @@ button:active{ transform:scale(0.98); }
 .letters-section{ display:none; width:100%; }
 
 .grid-container{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  margin-top:18px;
-  padding-bottom:10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+  padding-bottom: 10px;
+  overflow-x: auto;
+  min-width: 320px;
 }
 
-@media (max-width: 900px) {
-  .grid-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .grid-container {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .letter-card {
-    min-width: 0;
-    width: 100%;
-    max-width: 340px;
-    margin: 0 auto;
-    aspect-ratio: 1.1/1;
-  }
-}
-
-@media (max-width: 480px) {
-  .container { padding: 8px; }
-  .buttons{ flex-direction:column; gap:12px; }
-  button{ width:100%; max-width:280px; margin:0 auto; }
-  .grid-container{ grid-template-columns:1fr; gap:8px; }
-  .topic-text{ font-size:1.1rem; }
-  .letter-card.open{ width:98vw; height:80svh; min-width:0; }
-  .letter-card.centered{ width:92vw; min-width:0; }
-  .face-content { font-size:0.98rem; padding:10px; }
-  .face-topic { padding:8px; }
-  h1 { font-size:2rem; }
-}
+/* Remove all grid column overrides for mobile, always show 3 columns. Allow horizontal scroll if needed. */
 
 .letter-card{
   background:rgba(255,255,255,0.92);
@@ -242,7 +213,7 @@ button:active{ transform:scale(0.98); }
 <div class="container">
 
   <div id="proposal">
-    <h1>Will you be my Valentine, Naveesha ❤️?</h1>
+    <h1>Will you be my Valentine, Navee ❤️?</h1>
     <div class="buttons">
       <button class="btn-yes" id="yesBtn">YES!</button>
       <span id="noBtnPlaceholder" style="display:inline-block; width:0; height:0;"></span>
